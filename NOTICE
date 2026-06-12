@@ -1,0 +1,29 @@
+GloSSH
+Copyright (c) 2026 GlomarGadaffi
+Licensed under the MIT License (see LICENSE).
+
+GloSSH is a permissively-licensed secure-transport stack for ESP-IDF,
+created to replace copyleft/commercial dependencies (wolfSSH / wolfSSL).
+It bundles the following third-party software, each under its own
+permissive or public-domain terms. None of these are copyleft.
+
+--------------------------------------------------------------------------
+Dropbear SSH  (components/dropbear/dropbear, v2020.81)
+  Copyright (c) 2002-2020 Matt Johnston, and others.
+  MIT-style license. See components/dropbear/dropbear/LICENSE.
+
+  Dropbear bundles, under its own tree:
+    * LibTomCrypt  (components/dropbear/dropbear/libtomcrypt)
+        Public domain (Tom St Denis / The LibTom Projects).
+    * LibTomMath   (components/dropbear/dropbear/libtommath)
+        Public domain (Tom St Denis / The LibTom Projects).
+
+--------------------------------------------------------------------------
+TinySSH  (components/tinyssh/tinyssh)
+  Copyright (c) Jan Mojzis.
+  Public domain (CC0 1.0 fallback). See components/tinyssh/tinyssh/LICENCE.
+  Includes reference public-domain cryptography (NaCl/ref10 lineage).
+
+--------------------------------------------------------------------------
+The upstream license texts are retained verbatim within each vendored
+source tree. THIRD-PARTY-LICENSES.md indexes them.
