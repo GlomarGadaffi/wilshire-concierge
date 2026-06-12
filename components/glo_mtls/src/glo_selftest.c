@@ -7,7 +7,9 @@
  */
 #include "glo_mtls.h"
 #include "glo_mtls_crypto.h"
+#include "glo_tls13.h"
 #include "glo_kat_vectors.h"
+#include "glo_tls13_vectors.h"
 #include "crypto_sign_ed25519.h"
 #include <stdio.h>
 #include <string.h>
@@ -87,6 +89,42 @@ int glo_mtls_selftest(void) {
     sm[0] ^= 1;
     fails += boolcheck("ed25519 tamper-rej",
                        crypto_sign_ed25519_open(om, &omlen, sm, smlen, edpk) != 0);
+
+    /* TLS 1.3 key schedule (RFC 8446 §7.1; early/derived anchored to RFC 8448) */
+    uint8_t early[32], hs[32], chts[32], shts[32], ms[32], cats[32], sats[32];
+    uint8_t kkey[32], kiv[12], kfin[32];
+    glo_ks_early_secret(early, NULL, 0);
+    fails += check("ks early secret", early, KS_EARLY, 32);
+    glo_ks_handshake_secret(hs, early, KS_ECDHE);
+    fails += check("ks handshake sec", hs, KS_HS, 32);
+    glo_ks_derive_secret(chts, hs, "c hs traffic", KS_HS_THASH);
+    fails += check("ks c hs traffic", chts, KS_CHTS, 32);
+    glo_ks_derive_secret(shts, hs, "s hs traffic", KS_HS_THASH);
+    fails += check("ks s hs traffic", shts, KS_SHTS, 32);
+    glo_ks_master_secret(ms, hs);
+    fails += check("ks master secret", ms, KS_MS, 32);
+    glo_ks_derive_secret(cats, ms, "c ap traffic", KS_AP_THASH);
+    fails += check("ks c ap traffic", cats, KS_CATS, 32);
+    glo_ks_derive_secret(sats, ms, "s ap traffic", KS_AP_THASH);
+    fails += check("ks s ap traffic", sats, KS_SATS, 32);
+    glo_ks_traffic_key_iv(kkey, kiv, chts);
+    fails += check("ks traffic key", kkey, KS_CKEY, 32);
+    fails += check("ks traffic iv", kiv, KS_CIV, 12);
+    glo_ks_finished_key(kfin, chts);
+    fails += check("ks finished key", kfin, KS_CFIN, 32);
+
+    /* TLS 1.3 record layer (RFC 8446 §5.2/5.3): KAT seal + open round-trip */
+    uint8_t rec[128]; size_t reclen = 0;
+    glo_record_seal(rec, &reclen, REC_CONTENT, sizeof REC_CONTENT, REC_CTYPE,
+                    REC_KEY, REC_IV, REC_SEQ);
+    fails += boolcheck("record seal len", reclen == sizeof REC_EXPECT);
+    fails += check("record seal bytes", rec, REC_EXPECT, sizeof REC_EXPECT);
+    uint8_t rcontent[128], rctype; size_t rclen = 0;
+    int ro = glo_record_open(rcontent, &rclen, &rctype, REC_EXPECT, sizeof REC_EXPECT,
+                             REC_KEY, REC_IV, REC_SEQ);
+    fails += boolcheck("record open rt",
+                       ro == 0 && rctype == REC_CTYPE && rclen == sizeof REC_CONTENT &&
+                       memcmp(rcontent, REC_CONTENT, rclen) == 0);
 
     printf("[glo_mtls] self-test complete: %d failure(s)\n", fails);
     return fails;

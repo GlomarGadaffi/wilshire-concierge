@@ -13,6 +13,8 @@ idf_component_register(
         "src/glo_aead.c"
         "src/glo_hkdf.c"
         "src/glo_kex.c"
+        "src/glo_ks.c"
+        "src/glo_record.c"
         "src/glo_selftest.c"
     INCLUDE_DIRS "include"
     PRIV_INCLUDE_DIRS "src"
