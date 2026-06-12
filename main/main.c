@@ -12,6 +12,7 @@
 #include "esp_event.h"
 #include "esp_netif.h"
 #include "esp_log.h"
+#include "glo_mtls.h"
 
 #define TAG "main"
 
@@ -145,6 +146,13 @@ void app_main(void)
             (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
     printf("Free heap: %d\n", (int)esp_get_free_heap_size());
+
+    /* GloSSH mTLS crypto backend self-test (RFC KATs) */
+    if (glo_mtls_selftest() == 0) {
+        ESP_LOGI(TAG, "glo_mtls crypto self-test passed");
+    } else {
+        ESP_LOGE(TAG, "glo_mtls crypto self-test FAILED");
+    }
 
     /* Initialize WiFi SoftAP + Station */
     wifi_init_apsta();

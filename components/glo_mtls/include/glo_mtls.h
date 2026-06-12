@@ -46,6 +46,10 @@ int  glo_mtls_write(glo_mtls_ctx *ctx, const void *buf, size_t len);
 int  glo_mtls_read(glo_mtls_ctx *ctx, void *buf, size_t len);
 void glo_mtls_close(glo_mtls_ctx *ctx);
 
+/* Run the crypto backend self-test (RFC KATs + round-trips).
+ * Returns the number of failures; 0 means the TLS 1.3 crypto is byte-correct. */
+int glo_mtls_selftest(void);
+
 #ifdef __cplusplus
 }
 #endif
