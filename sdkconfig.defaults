@@ -1,0 +1,6 @@
+# GloSSH example defaults.
+#
+# app_main() initializes Wi-Fi (esp_wifi_init/netif/event loop) and starts the
+# TinySSH server directly, which needs more stack than the IDF default (3584).
+# Without this the main task overflows during esp_wifi_init.
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=8192
