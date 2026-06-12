@@ -1,0 +1,6 @@
+version: "0.1.0"
+description: "Minimal MIT-licensed SSH 2.0 server for ESP-IDF, pure PSA Crypto API"
+url: "https://example.invalid/littlessh"
+license: "MIT"
+dependencies:
+  idf: ">=5.0"
