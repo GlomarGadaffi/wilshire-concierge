@@ -1,6 +1,6 @@
-# wilshire-concierge
+# esp-secure-transport
 
-permissively-licensed (MIT/PD) secure-transport stack for ESP-IDF. **currently paused** in favor of its pragmatic sibling wilshire-bellhop, but documented here for reference.
+permissively-licensed (MIT/PD) secure-transport stack for ESP-IDF. **currently paused** in favor of its pragmatic sibling glossh, but documented here for reference.
 
 ## what's built
 
@@ -20,9 +20,9 @@ on-device self-test passes 26/26 checks (see `components/glo_mtls/src/glo_selfte
 
 ## why paused
 
-original goal: "avoid Apache-2.0 / mbedTLS" for a purely MIT/PD stack. turns out mbedTLS is **already in every ESP-IDF image** (esp_tls, HTTPS, Wi-Fi enterprise, PSA API), so avoiding it buys no smaller binary and no reduced license surface. for the practical goal (clean SSH console), wilshire-bellhop (littlessh) on PSA Crypto is simpler, hardware-accelerated, and OpenSSH-interoperable.
+original goal: "avoid Apache-2.0 / mbedTLS" for a purely MIT/PD stack. turns out mbedTLS is **already in every ESP-IDF image** (esp_tls, HTTPS, Wi-Fi enterprise, PSA API), so avoiding it buys no smaller binary and no reduced license surface. for the practical goal (clean SSH console), glossh (littlessh) on PSA Crypto is simpler, hardware-accelerated, and OpenSSH-interoperable.
 
-wilshire-concierge retains value if a genuinely pure zero-Apache stack is later required (non-ESP-IDF target, hard licensing constraint) or specifically for tiny raw-public-key (RFC 7250) mTLS, which mbedTLS supports poorly. the work here is correct and resumable.
+esp-secure-transport retains value if a genuinely pure zero-Apache stack is later required (non-ESP-IDF target, hard licensing constraint) or specifically for tiny raw-public-key (RFC 7250) mTLS, which mbedTLS supports poorly. the work here is correct and resumable.
 
 ## structure
 
